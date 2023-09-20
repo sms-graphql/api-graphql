@@ -1,15 +1,7 @@
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
-import { buildSchema } from 'graphql';
+import schema from './schema';
 import database from './database';
-
-var schema = buildSchema(
-  `
-  type Query {
-    hello: String
-  }
-  `
-)
 
 var app = express()
 app.use(
@@ -17,7 +9,7 @@ app.use(
   graphqlHTTP({
     schema: schema,
     context: { database },
-    graphiql: true,
+    graphiql: true
   })
 )
 
