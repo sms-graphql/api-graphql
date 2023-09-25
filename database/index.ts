@@ -59,5 +59,17 @@ export const getFilmsByCategoryId = async (id: number) => {
     }
 }
 
+export const findFilmsById = async (id: number) => {
+    const { data, error } = await database
+        .from('Movie')
+        .select('*')
+        .filter('id', 'eq', id)
+        .single();
+    if (error) {
+        throw error;
+    }
+    return data;
+};
+
 
 export default database;

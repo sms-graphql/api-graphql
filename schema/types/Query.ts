@@ -3,7 +3,7 @@ import category from './Category';
 import studio from './Studio';
 import film from './Film';
 import viewerType from './Viewer';
-import { findCategoryById, findStudioById } from '../../database';
+import { findCategoryById, findFilmsById, findStudioById } from '../../database';
 
 export default new GraphQLObjectType({
     name: 'Query',
@@ -39,6 +39,20 @@ export default new GraphQLObjectType({
             type: new GraphQLList(studio),
             resolve: async (obj, args, { database }) => {
                 const { data } = await database.from('Studio').select('*');
+                return data;
+            }
+        },
+        movie: {
+            type: film,
+            args: {
+                id: { type: GraphQLInt },
+            },
+            resolve: (obj, args) => findFilmsById(args.id),
+        },
+        movies: {
+            type: new GraphQLList(film),
+            resolve: async (obj, args, { database }) => {
+                const { data } = await database.from('Movie').select('*');
                 return data;
             }
         },
