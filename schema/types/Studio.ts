@@ -5,10 +5,12 @@ import {
     GraphQLList
 } from 'graphql';
 import filmType from './Film';
-import { getFilmsByCategoryId } from '../../database';
+import { getFilmsByStudioId } from '../../database';
+
+
 
 export default new GraphQLObjectType({
-    name: 'Category',
+    name: 'Studio',
     fields: {
         id: {
             type: GraphQLID
@@ -16,10 +18,13 @@ export default new GraphQLObjectType({
         name: {
             type: GraphQLString
         },
-        films: {
+        country: {
+            type: GraphQLString
+        },
+        hasProduced: {
             type: new GraphQLList(filmType),
-            resolve: (category, args, context) => {
-                return getFilmsByCategoryId(category.id);
+            resolve: (studio, args, context) => {
+                return getFilmsByStudioId(studio.id);
             },
         },
     }
