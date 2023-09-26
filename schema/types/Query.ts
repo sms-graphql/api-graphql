@@ -1,10 +1,11 @@
-import { GraphQLObjectType, GraphQLList, GraphQLInt } from 'graphql';
-import category from './Category';
-import studio from './Studio';
-import film from './Film';
+import { GraphQLInt, GraphQLList, GraphQLObjectType } from 'graphql';
+import { findActorById, findCategoryById, findDirectorById, findFilmsById, findStudioById } from '../../database';
 import actor from './Actor';
+import category from './Category';
+import director from './Director';
+import film from './Film';
+import studio from './Studio';
 import viewerType from './Viewer';
-import { findCategoryById, findFilmsById, findStudioById, findActorById } from '../../database';
 
 export default new GraphQLObjectType({
     name: 'Query',
@@ -68,6 +69,20 @@ export default new GraphQLObjectType({
             type: new GraphQLList(actor),
             resolve: async (obj, args, { database }) => {
                 const { data } = await database.from('Actor').select('*');
+                return data;
+            }
+        },
+        director: {
+            type: director,
+            args: {
+                id: { type: GraphQLInt }
+            },
+            resolve: (obj, args) => findDirectorById(args.id),
+        },
+        directors: {
+            type: new GraphQLList(actor),
+            resolve: async (obj, args, { database }) => {
+                const { data } = await database.from('Director').select('*');
                 return data;
             }
         },
