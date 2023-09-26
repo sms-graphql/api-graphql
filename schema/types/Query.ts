@@ -80,7 +80,7 @@ export default new GraphQLObjectType({
             resolve: (obj, args) => findDirectorById(args.id),
         },
         directors: {
-            type: new GraphQLList(actor),
+            type: new GraphQLList(director),
             resolve: async (obj, args, { database }) => {
                 const { data } = await database.from('Director').select('*');
                 return data;
