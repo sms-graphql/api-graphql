@@ -7,8 +7,6 @@ import {
 import filmType from './Film';
 import { getFilmsByStudioId } from '../../database';
 
-
-
 export default new GraphQLObjectType({
     name: 'Studio',
     fields: {

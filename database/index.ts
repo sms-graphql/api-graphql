@@ -71,5 +71,42 @@ export const findFilmsById = async (id: number) => {
     return data;
 };
 
+export const findActorById = async (id: number) => {
+    const { data, error } = await database
+        .from('Actor')
+        .select('*')
+        .filter('id', 'eq', id)
+        .single();
+    if (error) {
+        throw error;
+    }
+    return data;
+};
+
+
+export const getMoviesByActorId = async (actorId: number) => {
+
+    const { data: actorMovies, error } = await database
+        .from('Actor_Movie')
+        .select('id_movie')
+        .filter('id_actor', 'eq', actorId);
+    if (error) {
+        throw error;
+    }
+
+    const movieIds = actorMovies.map((relation) => relation.id_movie);
+
+    const { data: movies, error: moviesError } = await database
+        .from('Movie')
+        .select('*')
+        .in('id', movieIds);
+
+    if (moviesError) {
+        throw moviesError;
+    }
+
+    return movies;
+};
+
 
 export default database;
