@@ -95,6 +95,17 @@ export const findDirectorById = async (id: number) => {
     return data;
 };
 
+export const findPlaylistById = async (id: number) => {
+    const { data, error } = await database
+        .from('Playlist')
+        .select('*')
+        .filter('id', 'eq', id)
+        .single();
+    if (error) {
+        throw error;
+    }
+    return data;
+};
 
 export const getMoviesByActorId = async (actorId: number) => {
 
@@ -131,6 +142,30 @@ export const getMoviesByDirectorId = async (directorId: number) => {
     }
 
     const movieIds = directorMovies.map((relation) => relation.id_movie);
+
+    const { data: movies, error: moviesError } = await database
+        .from('Movie')
+        .select('*')
+        .in('id', movieIds);
+
+    if (moviesError) {
+        throw moviesError;
+    }
+
+    return movies;
+};
+
+export const getMoviesByPlaylistId = async (playlistId: number) => {
+
+    const { data: playlistMovies, error } = await database
+        .from('Playlist_Movie')
+        .select('id_movie')
+        .filter('id_playlist', 'eq', playlistId);
+    if (error) {
+        throw error;
+    }
+
+    const movieIds = playlistMovies.map((relation) => relation.id_movie);
 
     const { data: movies, error: moviesError } = await database
         .from('Movie')
