@@ -6,7 +6,7 @@ import session from 'express-session'
 
 declare module 'express-session' {
   interface SessionData {
-    viewer: { username: string };
+    viewer: { name: string };
   }
 }
 
@@ -41,7 +41,7 @@ app.use(
 );
 
 app.use('/login', (req, res) => {
-  req.session.viewer = { username: 'Spyl' };
+  req.session.viewer = { name: 'Spyl' };
   res.send('Bienvenue Spyl ! <a href="/graphql">Retourner sur GraphiQL.</a>');
 });
 

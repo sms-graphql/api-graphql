@@ -1,5 +1,5 @@
 import { GraphQLInt, GraphQLList, GraphQLObjectType } from 'graphql';
-import { findActorById, findCategoryById, findDirectorById, findFilmsById, findPlaylistById, findStudioById } from '../../database';
+import { findActorById, findCategoryById, findDirectorById, findFilmsById, findPlaylistById, findStudioById, findUserById } from '../../database';
 import actor from './Actor';
 import category from './Category';
 import director from './Director';
@@ -16,6 +16,15 @@ export default new GraphQLObjectType({
             resolve: (obj, args, context) => {
                 return context.viewer
             },
+        },
+        user: {
+            type: viewerType,
+            args: {
+                id: { type: GraphQLInt },
+            },
+            resolve: (obj, args, context) => {
+                return findUserById(args.id)
+            }
         },
         category: {
             type: category,

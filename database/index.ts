@@ -26,6 +26,18 @@ export const findStudioById = async (id: number) => {
     return data;
 };
 
+export const findUserById = async (id: number) => {
+    const { data, error } = await database
+        .from('User')
+        .select('*')
+        .filter('id', 'eq', id)
+        .single();
+    if (error) {
+        throw error;
+    }
+    return data;
+};
+
 export const getFilmsByStudioId = async (id: number) => {
     try {
         const { data, error } = await database
@@ -49,6 +61,22 @@ export const getFilmsByCategoryId = async (id: number) => {
             .from('Movie')
             .select('*')
             .filter('id_category', 'eq', id);
+
+        if (error) {
+            throw error;
+        }
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getPlaylistByUserId = async (id: number) => {
+    try {
+        const { data, error } = await database
+            .from('Playlist')
+            .select('*')
+            .filter('id_user', 'eq', id);
 
         if (error) {
             throw error;
