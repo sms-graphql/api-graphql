@@ -12,16 +12,22 @@ export default new GraphQLObjectType({
     fields: {
         viewer: {
             type: viewerType,
-            resolve: (obj, args, { viewer }) => {
-                return viewer;
-            }
+            resolve: (obj, args, context) => {
+                return context.viewer
+            },
         },
         category: {
             type: category,
             args: {
                 id: { type: GraphQLInt },
             },
-            resolve: (obj, args) => findCategoryById(args.id),
+            resolve: (obj, args, context) => {
+                console.log("context :", context.req.session)
+                if (!context.viewer) {
+                    return false
+                }
+                return findCategoryById(args.id)
+            }
         },
         categories: {
             type: new GraphQLList(category),
