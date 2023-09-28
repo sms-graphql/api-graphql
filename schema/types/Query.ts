@@ -4,21 +4,21 @@ import actor from './Actor';
 import category from './Category';
 import director from './Director';
 import film from './Film';
-import studio from './Studio';
 import playlist from './Playlist';
-import viewerType from './Viewer';
+import studio from './Studio';
+import userType from './User';
 
 export default new GraphQLObjectType({
     name: 'Query',
     fields: {
-        viewer: {
-            type: viewerType,
+        usersession: {
+            type: userType,
             resolve: (obj, args, context) => {
-                return context.viewer
+                return context.user
             },
         },
         user: {
-            type: viewerType,
+            type: userType,
             args: {
                 id: { type: GraphQLInt },
             },
@@ -33,7 +33,7 @@ export default new GraphQLObjectType({
             },
             resolve: (obj, args, context) => {
                 console.log("context :", context.req.session)
-                if (!context.viewer) {
+                if (!context.user) {
                     return false
                 }
                 return findCategoryById(args.id)

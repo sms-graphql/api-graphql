@@ -1,12 +1,12 @@
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
-import schema from './schema';
+import session from 'express-session';
 import database from './database';
-import session from 'express-session'
+import schema from './schema';
 
 declare module 'express-session' {
   interface SessionData {
-    viewer: { name: string };
+    user: { name: string };
   }
 }
 
@@ -22,13 +22,13 @@ app.use(
 );
 
 const buildContext = (req: any) => {
-  // Access the session to fetch the viewer…
-  let viewer: any = null
-  if (req.session && req.session.viewer) {
-    viewer = req.session.viewer;
+  // Access the session to fetch the user…
+  let user: any = null
+  if (req.session && req.session.user) {
+    user = req.session.user;
   }
 
-  return { req, viewer, database };
+  return { req, user, database };
 };
 
 app.use(
@@ -41,7 +41,7 @@ app.use(
 );
 
 app.use('/login', (req, res) => {
-  req.session.viewer = { name: 'Spyl' };
+  req.session.user = { name: 'Spyl' };
   res.send('Bienvenue Spyl ! <a href="/graphql">Retourner sur GraphiQL.</a>');
 });
 

@@ -1,15 +1,31 @@
 import {
+    GraphQLID,
+    GraphQLList,
     GraphQLObjectType,
-    GraphQLString,
-    GraphQLList
+    GraphQLString
 } from 'graphql';
-import playlistType from './Playlist';
 import { getPlaylistByUserId } from '../../database';
+import playlistType from './Playlist';
 
 export default new GraphQLObjectType({
-    name: 'Viewer',
+    name: 'user',
     fields: {
-        name: {
+        id: {
+            type: GraphQLID
+        },
+        first_name: {
+            type: GraphQLString
+        },
+        last_name: {
+            type: GraphQLString
+        },
+        email: {
+            type: GraphQLString
+        },
+        address: {
+            type: GraphQLString
+        },
+        phone_number: {
             type: GraphQLString
         },
         date_of_birth: {
