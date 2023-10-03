@@ -1,14 +1,14 @@
 import {
-    GraphQLString,
-    GraphQLID,
     GraphQLObjectType,
+    GraphQLInt,
+    GraphQLString,
 } from 'graphql';
 
-const filmType = new GraphQLObjectType({
+export default new GraphQLObjectType({
     name: 'Film',
-    fields: {
+    fields: () => ({
         id: {
-            type: GraphQLID
+            type: GraphQLInt
         },
         title: {
             type: GraphQLString
@@ -19,8 +19,5 @@ const filmType = new GraphQLObjectType({
         id_category: {
             type: GraphQLString
         }
-    }
+    }),
 });
-
-export default filmType;
-
