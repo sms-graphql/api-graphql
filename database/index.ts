@@ -55,6 +55,23 @@ export const getFilmsByStudioId = async (id: number) => {
     }
 }
 
+export const getStudioByFilmId = async (id: number) => {
+    try {
+        const { data, error } = await database
+            .from('Studio')
+            .select('*')
+            .filter('id', 'eq', id);
+
+        if (error) {
+            throw error;
+        }
+
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const getFilmsByCategoryId = async (id: number) => {
     try {
         const { data, error } = await database
@@ -159,6 +176,30 @@ export const getMoviesByActorId = async (actorId: number) => {
     return movies;
 };
 
+export const getActorByMovieId = async (movieId: number) => {
+
+    const { data: actorMovies, error } = await database
+        .from('Actor_Movie')
+        .select('id_actor')
+        .filter('id_movie', 'eq', movieId);
+    if (error) {
+        throw error;
+    }
+
+    const actorIds = actorMovies.map((relation) => relation.id_actor);
+
+    const { data: actors, error: actorsError } = await database
+        .from('Actor')
+        .select('*')
+        .in('id', actorIds);
+
+    if (actorsError) {
+        throw actorsError;
+    }
+
+    return actors;
+};
+
 export const getMoviesByDirectorId = async (directorId: number) => {
 
     const { data: directorMovies, error } = await database
@@ -181,6 +222,30 @@ export const getMoviesByDirectorId = async (directorId: number) => {
     }
 
     return movies;
+};
+
+export const getDirectorByMovieId = async (movieId: number) => {
+
+    const { data: directorMovies, error } = await database
+        .from('Director_Movie')
+        .select('id_director')
+        .filter('id_movie', 'eq', movieId);
+    if (error) {
+        throw error;
+    }
+
+    const directorIds = directorMovies.map((relation) => relation.id_director);
+
+    const { data: directors, error: directorsError } = await database
+        .from('Movie')
+        .select('*')
+        .in('id', directorIds);
+
+    if (directorsError) {
+        throw directorsError;
+    }
+
+    return directors;
 };
 
 export const getMoviesByPlaylistId = async (playlistId: number) => {
