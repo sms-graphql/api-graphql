@@ -283,5 +283,31 @@ export const findPlaylistsByUserId = async (userId: number) => {
     return playlists;
 };
 
+export const getCategoryNameById = async (idCategory: number) => {
+
+    const { data: data, error } = await database
+        .from('Category')
+        .select('name')
+        .filter('id', 'eq', idCategory)
+        .single();
+    if (error) {
+        throw error;
+    }
+    return data.name;
+};
+
+export const getStudioNameById = async (idStudio: number) => {
+
+    const { data: data, error } = await database
+        .from('Studio')
+        .select('name')
+        .filter('id', 'eq', idStudio)
+        .single();
+    if (error) {
+        throw error;
+    }
+    return data.name;
+};
+
 
 export default database;

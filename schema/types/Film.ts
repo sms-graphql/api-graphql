@@ -4,7 +4,7 @@ import {
     GraphQLObjectType,
     GraphQLString,
 } from 'graphql';
-import { getActorsByMovieId, getDirectorsByMovieId } from '../../database';
+import { getActorsByMovieId, getCategoryNameById, getDirectorsByMovieId, getStudioNameById } from '../../database';
 import actorType from './Actor';
 import directorType from './Director';
 
@@ -22,6 +22,14 @@ export const FilmType: GraphQLObjectType = new GraphQLObjectType({
         },
         id_category: {
             type: GraphQLString
+        },
+        category_name: {
+            type: GraphQLString,
+            resolve: (movie, args) => getCategoryNameById(movie.id_category)
+        },
+        studio_name: {
+            type: GraphQLString,
+            resolve: (movie, args) => getStudioNameById(movie.id_studio)
         },
         actors: {
             type: new GraphQLList(actorType),
