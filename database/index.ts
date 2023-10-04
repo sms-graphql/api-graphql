@@ -271,5 +271,17 @@ export const getMoviesByPlaylistId = async (playlistId: number) => {
     return movies;
 };
 
+export const findPlaylistsByUserId = async (userId: number) => {
+
+    const { data: playlists, error } = await database
+        .from('Playlist')
+        .select('*')
+        .filter('id_user', 'eq', userId);
+    if (error) {
+        throw error;
+    }
+    return playlists;
+};
+
 
 export default database;

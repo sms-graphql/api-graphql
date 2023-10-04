@@ -1,5 +1,5 @@
 import { GraphQLInt, GraphQLList, GraphQLObjectType } from 'graphql';
-import { findActorById, findCategoryById, findDirectorById, findFilmsById, findPlaylistById, findStudioById, findUserById } from '../../database';
+import { findActorById, findCategoryById, findDirectorById, findFilmsById, findPlaylistById, findPlaylistsByUserId, findStudioById, findUserById } from '../../database';
 import actor from './Actor';
 import category from './Category';
 import director from './Director';
@@ -115,6 +115,14 @@ export default new GraphQLObjectType({
                 const { data } = await database.from('Playlist').select('*');
                 return data;
             }
+        },
+        userPlaylists: {
+            type: new GraphQLList(playlist),
+            args: {
+                id: { type: GraphQLInt }
+            },
+            resolve: async (obj, args) => findPlaylistsByUserId(args.id)
+            
         },
     }
 });
