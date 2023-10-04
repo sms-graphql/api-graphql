@@ -1,10 +1,14 @@
 import {
-    GraphQLObjectType,
     GraphQLInt,
+    GraphQLList,
+    GraphQLObjectType,
     GraphQLString,
 } from 'graphql';
+import { getActorsByMovieId, getDirectorsByMovieId } from '../../database';
+import actorType from './Actor';
+import directorType from './Director';
 
-export default new GraphQLObjectType({
+export const FilmType: GraphQLObjectType = new GraphQLObjectType({
     name: 'Film',
     fields: () => ({
         id: {
@@ -18,6 +22,20 @@ export default new GraphQLObjectType({
         },
         id_category: {
             type: GraphQLString
+        },
+        actors: {
+            type: new GraphQLList(actorType),
+            resolve: (movie, args) => {
+                return getActorsByMovieId(movie.id);
+            },
+        },
+        directors: {
+            type: new GraphQLList(directorType),
+            resolve: (movie, args) => {
+                return getDirectorsByMovieId(movie.id)
+            }
         }
     }),
 });
+
+export default FilmType
