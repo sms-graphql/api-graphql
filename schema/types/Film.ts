@@ -6,7 +6,10 @@ import {
 } from 'graphql';
 import { getActorsByMovieId, getCategoryNameById, getDirectorsByMovieId, getStudioNameById } from '../../database';
 import actorType from './Actor';
+import categoryType from './Category';
 import directorType from './Director';
+import studioType from './Studio';
+
 
 export const FilmType: GraphQLObjectType = new GraphQLObjectType({
     name: 'Film',
@@ -23,12 +26,12 @@ export const FilmType: GraphQLObjectType = new GraphQLObjectType({
         id_category: {
             type: GraphQLString
         },
-        category_name: {
-            type: GraphQLString,
+        category: {
+            type: categoryType,
             resolve: (movie, args) => getCategoryNameById(movie.id_category)
         },
-        studio_name: {
-            type: GraphQLString,
+        studio: {
+            type: studioType,
             resolve: (movie, args) => getStudioNameById(movie.id_studio)
         },
         actors: {

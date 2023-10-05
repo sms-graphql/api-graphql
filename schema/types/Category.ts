@@ -1,15 +1,15 @@
 import {
-    GraphQLString,
     GraphQLID,
+    GraphQLList,
     GraphQLObjectType,
-    GraphQLList
+    GraphQLString
 } from 'graphql';
-import filmType from './Film';
 import { getFilmsByCategoryId } from '../../database';
+import filmType from './Film';
 
-export default new GraphQLObjectType({
+export const CategoryType: GraphQLObjectType = new GraphQLObjectType({
     name: 'Category',
-    fields: {
+    fields: () => ({
         id: {
             type: GraphQLID
         },
@@ -22,5 +22,7 @@ export default new GraphQLObjectType({
                 return getFilmsByCategoryId(category.id);
             },
         },
-    }
+    }),
 });
+
+export default CategoryType

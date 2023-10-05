@@ -285,28 +285,28 @@ export const findPlaylistsByUserId = async (userId: number) => {
 
 export const getCategoryNameById = async (idCategory: number) => {
 
-    const { data: data, error } = await database
+    const { data: category, error } = await database
         .from('Category')
-        .select('name')
+        .select('*')
         .filter('id', 'eq', idCategory)
         .single();
     if (error) {
         throw error;
     }
-    return data.name;
+    return category;
 };
 
 export const getStudioNameById = async (idStudio: number) => {
 
-    const { data: data, error } = await database
+    const { data: studio, error } = await database
         .from('Studio')
-        .select('name')
+        .select('*')
         .filter('id', 'eq', idStudio)
         .single();
     if (error) {
         throw error;
     }
-    return data.name;
+    return studio;
 };
 
 

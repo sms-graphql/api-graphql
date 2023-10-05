@@ -1,15 +1,15 @@
 import {
-    GraphQLString,
     GraphQLID,
+    GraphQLList,
     GraphQLObjectType,
-    GraphQLList
+    GraphQLString
 } from 'graphql';
-import filmType from './Film';
 import { getFilmsByStudioId } from '../../database';
+import filmType from './Film';
 
-export default new GraphQLObjectType({
+export const StudioType: GraphQLObjectType = new GraphQLObjectType({
     name: 'Studio',
-    fields: {
+    fields: () => ({
         id: {
             type: GraphQLID
         },
@@ -25,5 +25,7 @@ export default new GraphQLObjectType({
                 return getFilmsByStudioId(studio.id);
             },
         },
-    }
+    }),
 });
+
+export default StudioType
