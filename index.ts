@@ -22,7 +22,6 @@ app.use(
 );
 
 const buildContext = (req: any) => {
-  // Access the session to fetch the user…
   let user: any = null
   if (req.session && req.session.user) {
     user = req.session.user;

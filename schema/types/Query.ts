@@ -1,5 +1,5 @@
-import { GraphQLInt, GraphQLList, GraphQLObjectType } from 'graphql';
-import { findActorById, findCategoryById, findDirectorById, findFilmsById, findPlaylistById, findPlaylistsByUserId, findStudioById, findUserById } from '../../database';
+import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLBoolean, GraphQLString } from 'graphql';
+import { findActorById, findCategoryById, findDirectorById, findFilmsById, findPlaylistById, findPlaylistsByUserId, findStudioById, findUserById, findUserByName } from '../../database';
 import actor from './Actor';
 import category from './Category';
 import director from './Director';
@@ -122,7 +122,36 @@ export default new GraphQLObjectType({
                 id: { type: GraphQLInt }
             },
             resolve: async (obj, args) => findPlaylistsByUserId(args.id)
-            
+
+        },
+        login: {
+            type: userType,
+            args: {
+                username: { type: GraphQLString },
+                password: { type: GraphQLString },
+            },
+            resolve: async (_, args, context) => {
+                const { req } = context;
+                console.log("username :", args.username)
+                console.log("password :", args.password)
+
+                const user = await findUserByName(args.username)
+
+                console.log("user : ", user)
+
+                if (!user) {
+                    console.log("pas de user correspondant")
+                    throw new Error(`Aucun utilisateur correspondant`);
+                }
+                if (user.password === args.password) {
+                    req.session.user = user;
+                    console.log(req.session);
+                    return user;
+                }
+
+                console.log("mauvais mdp")
+                throw new Error(`Nom d'utilisateur ou mot de passe incorrect`);
+            },
         },
     }
 });
