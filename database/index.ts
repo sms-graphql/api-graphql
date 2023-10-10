@@ -35,9 +35,9 @@ export const findUserById = async (id: number) => {
     if (error) {
         throw error;
     }
-    
+
     delete data.password;
-    
+
     return data;
 };
 
