@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLBoolean, GraphQLString } from 'graphql';
+import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 import { findActorById, findCategoryById, findDirectorById, findFilmsById, findPlaylistById, findPlaylistsByUserId, findStudioById, findUserById, findUserByName } from '../../database';
 import actor from './Actor';
 import category from './Category';
@@ -121,7 +121,13 @@ export default new GraphQLObjectType({
             args: {
                 id: { type: GraphQLInt }
             },
-            resolve: async (obj, args) => findPlaylistsByUserId(args.id)
+            resolve: async (obj, args, { user }) => {
+                if (user) {
+                    findPlaylistsByUserId(user.id);
+                } else {
+                    throw new Error(`Vous n'êtes pas autorisé`);
+                }
+            }
 
         },
         login: {
@@ -132,15 +138,12 @@ export default new GraphQLObjectType({
             },
             resolve: async (_, args, context) => {
                 const { req } = context;
-                console.log("username :", args.username)
-                console.log("password :", args.password)
 
                 const user = await findUserByName(args.username)
 
                 console.log("user : ", user)
 
                 if (!user) {
-                    console.log("pas de user correspondant")
                     throw new Error(`Aucun utilisateur correspondant`);
                 }
                 if (user.password === args.password) {
@@ -149,8 +152,18 @@ export default new GraphQLObjectType({
                     return user;
                 }
 
-                console.log("mauvais mdp")
                 throw new Error(`Nom d'utilisateur ou mot de passe incorrect`);
+            },
+        },
+        logout: {
+            type: GraphQLString,
+            resolve: async (_, args, context) => {
+                const { req } = context;
+                if (req.session.user) {
+                    req.session.destroy();
+                    return 'Déconnexion réussie';
+                }
+                throw new Error('Aucun utilisateur connecté');
             },
         },
     }

@@ -45,9 +45,6 @@ export const findUserByName = async (userName: string) => {
             .select('*')
             .filter('email', 'eq', userName)
             .single();
-        if (error) {
-            throw error;
-        }
         return data;
     } catch (error) {
         console.error("Erreur lors de la recherche de l'utilisateur :", error);
