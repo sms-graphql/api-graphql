@@ -17,7 +17,7 @@ app.use(
     secret: 'A super secret',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 60000, secure: false }
+    cookie: { maxAge: 60000 * 60, secure: false }
   })
 );
 
@@ -38,24 +38,6 @@ app.use(
     graphiql: true
   }))
 );
-
-app.use('/login', (req, res) => {
-  req.session.user = { name: 'Spyl' };
-  res.send('Bienvenue Spyl ! <a href="/graphql">Retourner sur GraphiQL.</a>');
-});
-
-app.use('/logout', (req, res) => {
-  req.session.destroy(() => { });
-  res.send('Aurevoir ! <a href="/graphql">Retourner sur GraphiQL.</a>');
-});
-
-app.use('/', (_, res) => {
-  res.send(`
-    <a href="/graphql">GraphiQL</a>
-    <a href="/login">Login</a>
-    <a href="/logout">Logout</a>
-  `);
-});
 
 app.listen(4000);
 console.log('Running index at http://localhost:4000/');

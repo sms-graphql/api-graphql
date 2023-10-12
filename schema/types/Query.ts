@@ -118,9 +118,6 @@ export default new GraphQLObjectType({
         },
         userPlaylists: {
             type: new GraphQLList(playlist),
-            args: {
-                id: { type: GraphQLInt }
-            },
             resolve: async (obj, args, { user }) => {
                 if (user) {
                     findPlaylistsByUserId(user.id);
