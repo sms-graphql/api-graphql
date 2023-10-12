@@ -5,7 +5,7 @@ import {
     GraphQLObjectType,
 } from 'graphql';
 import { getMoviesByPlaylistId } from '../../database';
-import filmType from './Film';
+import movieType from './Movie';
 
 const playlistType = new GraphQLObjectType({
     name: 'Playlist',
@@ -20,7 +20,7 @@ const playlistType = new GraphQLObjectType({
             type: GraphQLString
         },
         movies: {
-            type: new GraphQLList(filmType),
+            type: new GraphQLList(movieType),
             resolve: (playlist, args) => {
                 return getMoviesByPlaylistId(playlist.id);
             },

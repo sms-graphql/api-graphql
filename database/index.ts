@@ -2,7 +2,7 @@ import createClient from './createClient';
 
 let database = createClient();
 
-export const findCategoryById = async (id: number) => {
+export const getCategoryById = async (id: number) => {
     const { data, error } = await database
         .from('Category')
         .select('*')
@@ -14,7 +14,7 @@ export const findCategoryById = async (id: number) => {
     return data;
 };
 
-export const findStudioById = async (id: number) => {
+export const getStudioById = async (id: number) => {
     const { data, error } = await database
         .from('Studio')
         .select('*')
@@ -26,7 +26,7 @@ export const findStudioById = async (id: number) => {
     return data;
 };
 
-export const findUserById = async (id: number) => {
+export const getUserById = async (id: number) => {
     const { data, error } = await database
         .from('User')
         .select('*')
@@ -41,7 +41,7 @@ export const findUserById = async (id: number) => {
     return data;
 };
 
-export const findUserByName = async (userName: string) => {
+export const getUserByName = async (userName: string) => {
     try {
         const { data, error } = await database
             .from('User')
@@ -55,7 +55,7 @@ export const findUserByName = async (userName: string) => {
     }
 };
 
-export const getFilmsByStudioId = async (id: number) => {
+export const getMoviesByStudioId = async (id: number) => {
     try {
         const { data, error } = await database
             .from('Movie')
@@ -72,7 +72,7 @@ export const getFilmsByStudioId = async (id: number) => {
     }
 }
 
-export const getStudioByFilmId = async (id: number) => {
+export const getStudioByMovieId = async (id: number) => {
     try {
         const { data, error } = await database
             .from('Studio')
@@ -89,7 +89,7 @@ export const getStudioByFilmId = async (id: number) => {
     }
 }
 
-export const getFilmsByCategoryId = async (id: number) => {
+export const getMoviesByCategoryId = async (id: number) => {
     try {
         const { data, error } = await database
             .from('Movie')
@@ -121,7 +121,7 @@ export const getPlaylistByUserId = async (id: number) => {
     }
 }
 
-export const findFilmsById = async (id: number) => {
+export const getMoviesById = async (id: number) => {
     const { data, error } = await database
         .from('Movie')
         .select('*')
@@ -133,7 +133,7 @@ export const findFilmsById = async (id: number) => {
     return data;
 };
 
-export const findActorById = async (id: number) => {
+export const getActorById = async (id: number) => {
     const { data, error } = await database
         .from('Actor')
         .select('*')
@@ -145,7 +145,7 @@ export const findActorById = async (id: number) => {
     return data;
 };
 
-export const findDirectorById = async (id: number) => {
+export const getDirectorById = async (id: number) => {
     const { data, error } = await database
         .from('Director')
         .select('*')
@@ -157,7 +157,7 @@ export const findDirectorById = async (id: number) => {
     return data;
 };
 
-export const findPlaylistById = async (id: number) => {
+export const getPlaylistById = async (id: number) => {
     const { data, error } = await database
         .from('Playlist')
         .select('*')
@@ -288,7 +288,7 @@ export const getMoviesByPlaylistId = async (playlistId: number) => {
     return movies;
 };
 
-export const findPlaylistsByUserId = async (userId: number) => {
+export const getPlaylistsByUserId = async (userId: number) => {
 
     const { data: playlists, error } = await database
         .from('Playlist')

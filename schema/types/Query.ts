@@ -1,9 +1,9 @@
 import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
-import { findActorById, findCategoryById, findDirectorById, findFilmsById, findPlaylistById, findPlaylistsByUserId, findStudioById, findUserById, findUserByName } from '../../database';
+import { getActorById, getCategoryById, getDirectorById, getMoviesById, getPlaylistById, getPlaylistsByUserId, getStudioById, getUserById, getUserByName } from '../../database';
 import actor from './Actor';
 import category from './Category';
 import director from './Director';
-import film from './Film';
+import movie from './Movie';
 import playlist from './Playlist';
 import studio from './Studio';
 import userType from './User';
@@ -23,7 +23,7 @@ export default new GraphQLObjectType({
                 id: { type: GraphQLInt },
             },
             resolve: (obj, args, context) => {
-                return findUserById(args.id)
+                return getUserById(args.id)
             }
         },
         category: {
@@ -35,7 +35,7 @@ export default new GraphQLObjectType({
                 if (!context.user) {
                     return false
                 }
-                return findCategoryById(args.id)
+                return getCategoryById(args.id)
             }
         },
         categories: {
@@ -50,7 +50,7 @@ export default new GraphQLObjectType({
             args: {
                 id: { type: GraphQLInt },
             },
-            resolve: (obj, args) => findStudioById(args.id),
+            resolve: (obj, args) => getStudioById(args.id),
         },
         studios: {
             type: new GraphQLList(studio),
@@ -60,14 +60,14 @@ export default new GraphQLObjectType({
             }
         },
         movie: {
-            type: film,
+            type: movie,
             args: {
                 id: { type: GraphQLInt },
             },
-            resolve: (obj, args) => findFilmsById(args.id),
+            resolve: (obj, args) => getMoviesById(args.id),
         },
         movies: {
-            type: new GraphQLList(film),
+            type: new GraphQLList(movie),
             resolve: async (obj, args, { database }) => {
                 const { data } = await database.from('Movie').select('*');
                 return data;
@@ -78,7 +78,7 @@ export default new GraphQLObjectType({
             args: {
                 id: { type: GraphQLInt }
             },
-            resolve: (obj, args) => findActorById(args.id),
+            resolve: (obj, args) => getActorById(args.id),
         },
         actors: {
             type: new GraphQLList(actor),
@@ -92,7 +92,7 @@ export default new GraphQLObjectType({
             args: {
                 id: { type: GraphQLInt }
             },
-            resolve: (obj, args) => findDirectorById(args.id),
+            resolve: (obj, args) => getDirectorById(args.id),
         },
         directors: {
             type: new GraphQLList(director),
@@ -106,7 +106,7 @@ export default new GraphQLObjectType({
             args: {
                 id: { type: GraphQLInt }
             },
-            resolve: (obj, args) => findPlaylistById(args.id),
+            resolve: (obj, args) => getPlaylistById(args.id),
         },
         playlists: {
             type: new GraphQLList(playlist),
@@ -119,7 +119,7 @@ export default new GraphQLObjectType({
             type: new GraphQLList(playlist),
             resolve: async (obj, args, { user }) => {
                 if (user) {
-                    return findPlaylistsByUserId(user.id);
+                    return getPlaylistsByUserId(user.id);
                 } else {
                     throw new Error(`Vous n'êtes pas autorisé`);
                 }
@@ -135,7 +135,7 @@ export default new GraphQLObjectType({
             resolve: async (_, args, context) => {
                 const { req } = context;
 
-                const user = await findUserByName(args.username)
+                const user = await getUserByName(args.username)
 
                 if (!user) {
                     throw new Error(`Aucun utilisateur correspondant`);
