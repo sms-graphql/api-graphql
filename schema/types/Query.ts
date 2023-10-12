@@ -119,7 +119,7 @@ export default new GraphQLObjectType({
             type: new GraphQLList(playlist),
             resolve: async (obj, args, { user }) => {
                 if (user) {
-                    findPlaylistsByUserId(user.id);
+                    return findPlaylistsByUserId(user.id);
                 } else {
                     throw new Error(`Vous n'êtes pas autorisé`);
                 }
