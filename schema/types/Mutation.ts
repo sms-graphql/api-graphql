@@ -1,8 +1,8 @@
 import { GraphQLObjectType } from 'graphql';
 import createPlaylistMutation from '../mutations/createPlaylistMutation';
 import createUserMutation from '../mutations/createUserMutation';
-import addFilmToPlaylistMutation from '../mutations/addFilmToPlaylistMutation';
-import removeFilmFromPlaylistMutation from '../mutations/removeFilmFromPlaylistMutation';
+import addMovieToPlaylistMutation from '../mutations/addMovieToPlaylistMutation';
+import removeMovieFromPlaylistMutation from '../mutations/removeMovieFromPlaylistMutation';
 import updatePlaylistNameMutation from '../mutations/updatePlaylistNameMutation';
 import removePlaylistMutation from '../mutations/removePlaylistMutation';
 
@@ -11,8 +11,8 @@ export default new GraphQLObjectType({
   fields: {
     createPlaylist: createPlaylistMutation,
     createUser: createUserMutation,
-    addFilmToPlaylist: addFilmToPlaylistMutation,
-    removeFilmFromPlaylist: removeFilmFromPlaylistMutation,
+    addMovieToPlaylist: addMovieToPlaylistMutation,
+    removeMovieFromPlaylist: removeMovieFromPlaylistMutation,
     updatePlaylistName: updatePlaylistNameMutation,
     removePlaylist: removePlaylistMutation
   },

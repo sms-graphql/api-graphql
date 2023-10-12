@@ -6,7 +6,7 @@ import {
 } from 'graphql';
 import personInterface, { personFields } from '../interfaces/PersonInterface';
 import { getMoviesByDirectorId } from '../../database';
-import filmType from './Film';
+import movieType from './Movie';
 
 export default new GraphQLObjectType({
     name: 'Director',
@@ -14,7 +14,7 @@ export default new GraphQLObjectType({
     fields: () => ({
         ...personFields,
         movies: {
-            type: new GraphQLList(filmType),
+            type: new GraphQLList(movieType),
             resolve: (director, args) => {
                 return getMoviesByDirectorId(director.id);
             },

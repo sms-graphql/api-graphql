@@ -11,8 +11,8 @@ import directorType from './Director';
 import studioType from './Studio';
 
 
-export const FilmType: GraphQLObjectType = new GraphQLObjectType({
-    name: 'Film',
+export const MovieType: GraphQLObjectType = new GraphQLObjectType({
+    name: 'Movie',
     fields: () => ({
         id: {
             type: GraphQLInt
@@ -49,4 +49,4 @@ export const FilmType: GraphQLObjectType = new GraphQLObjectType({
     }),
 });
 
-export default FilmType
+export default MovieType

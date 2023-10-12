@@ -4,8 +4,8 @@ import {
     GraphQLObjectType,
     GraphQLString
 } from 'graphql';
-import { getFilmsByCategoryId } from '../../database';
-import filmType from './Film';
+import { getMoviesByCategoryId } from '../../database';
+import movieType from './Movie';
 
 export const CategoryType: GraphQLObjectType = new GraphQLObjectType({
     name: 'Category',
@@ -16,10 +16,10 @@ export const CategoryType: GraphQLObjectType = new GraphQLObjectType({
         name: {
             type: GraphQLString
         },
-        films: {
-            type: new GraphQLList(filmType),
+        movies: {
+            type: new GraphQLList(movieType),
             resolve: (category, args, context) => {
-                return getFilmsByCategoryId(category.id);
+                return getMoviesByCategoryId(category.id);
             },
         },
     }),

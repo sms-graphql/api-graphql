@@ -4,8 +4,8 @@ import {
     GraphQLObjectType,
     GraphQLString
 } from 'graphql';
-import { getFilmsByStudioId } from '../../database';
-import filmType from './Film';
+import { getMoviesByStudioId } from '../../database';
+import movieType from './Movie';
 
 export const StudioType: GraphQLObjectType = new GraphQLObjectType({
     name: 'Studio',
@@ -20,9 +20,9 @@ export const StudioType: GraphQLObjectType = new GraphQLObjectType({
             type: GraphQLString
         },
         hasProduced: {
-            type: new GraphQLList(filmType),
+            type: new GraphQLList(movieType),
             resolve: (studio, args, context) => {
-                return getFilmsByStudioId(studio.id);
+                return getMoviesByStudioId(studio.id);
             },
         },
     }),
