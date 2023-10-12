@@ -1,0 +1,198 @@
+type Category {
+  id: ID
+  name: String
+  movies: [Movie]
+}
+
+type Movie {
+  id: Int
+  title: String
+  id_studio: String
+  id_category: String
+  category: Category
+  studio: Studio
+  actors: [Actor]
+  directors: [Director]
+}
+
+type Actor implements Person {
+  id: Int
+  last_name: String
+  first_name: String
+  date_of_birth: String
+  movies: [Movie]
+}
+
+interface Person {
+  id: Int
+  last_name: String
+  first_name: String
+  date_of_birth: String
+}
+
+type Director implements Person {
+  id: Int
+  last_name: String
+  first_name: String
+  date_of_birth: String
+  movies: [Movie]
+}
+
+type Studio {
+  id: ID
+  name: String
+  country: String
+  hasProduced: [Movie]
+}
+
+type Query {
+  usersession: user
+  user(id: Int): user
+  category(id: Int): Category
+  categories: [Category]
+  studio(id: Int): Studio
+  studios: [Studio]
+  movie(id: Int): Movie
+  movies(orderBy: MovieOrder = {direction: ASC, field: TITLE}, filter: MovieFilterInput = {title: ""}): [Movie]
+  actor(id: Int): Actor
+  actors: [Actor]
+  director(id: Int): Director
+  directors: [Director]
+  playlist(id: Int): Playlist
+  playlists: [Playlist]
+  userPlaylists: [Playlist]
+  login(username: String, password: String): user
+  logout: String
+}
+
+type user {
+  id: ID
+  first_name: String
+  last_name: String
+  email: String
+  address: String
+  phone_number: String
+  date_of_birth: String
+  playlist: [Playlist]
+}
+
+type Playlist {
+  id: ID
+  name: String
+  id_user: String
+  movies: [Movie]
+}
+
+input MovieOrder {
+  direction: OrderDirection
+  field: MovieOrderField
+}
+
+"""The possible direction for ordering."""
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+"""The possible field for ordering movies."""
+enum MovieOrderField {
+  ID
+  TITLE
+}
+
+input MovieFilterInput {
+  title: String
+}
+
+type Mutation {
+  """Add a playlist"""
+  createPlaylist(input: CreatePlaylistInput!): CreatePlaylistPayload
+
+  """Add a user"""
+  createUser(input: CreateUserInput!): CreateUserPayload
+
+  """Add a movie to a playlist"""
+  addMovieToPlaylist(input: AddMovieToPlaylistInput!): AddMovieToPlaylistPayload
+
+  """Remove a movie from a playlist"""
+  removeMovieFromPlaylist(input: RemoveMovieFromPlaylistInput!): RemoveMovieFromPlaylistPayload
+
+  """Update the name of a playlist"""
+  updatePlaylistName(input: UpdatePlaylistNameInput!): UpdatePlaylistNamePayload
+
+  """Remove a playlist"""
+  removePlaylist(input: RemovePlaylistInput!): RemovePlaylistPayload
+}
+
+type CreatePlaylistPayload {
+  playlist: Playlist
+  clientMutationId: String
+}
+
+input CreatePlaylistInput {
+  playlistName: String!
+  clientMutationId: String
+}
+
+type CreateUserPayload {
+  user: user
+  clientMutationId: String
+}
+
+input CreateUserInput {
+  user: UserInput!
+  clientMutationId: String
+}
+
+input UserInput {
+  first_name: String
+  last_name: String
+  email: String
+  address: String
+  password: String
+  phone_number: String
+  date_of_birth: String
+}
+
+type AddMovieToPlaylistPayload {
+  playlist: Playlist
+  clientMutationId: String
+}
+
+input AddMovieToPlaylistInput {
+  movieId: ID!
+  playlistId: ID!
+  clientMutationId: String
+}
+
+type RemoveMovieFromPlaylistPayload {
+  playlist: Playlist
+  clientMutationId: String
+}
+
+input RemoveMovieFromPlaylistInput {
+  movieId: ID!
+  playlistId: ID!
+  clientMutationId: String
+}
+
+type UpdatePlaylistNamePayload {
+  playlist: Playlist
+  clientMutationId: String
+}
+
+input UpdatePlaylistNameInput {
+  playlistId: ID!
+  newName: String!
+  clientMutationId: String
+}
+
+type RemovePlaylistPayload {
+  playlists: [Playlist]
+  clientMutationId: String
+}
+
+input RemovePlaylistInput {
+  playlistId: ID!
+  clientMutationId: String
+}
