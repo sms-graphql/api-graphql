@@ -32,7 +32,6 @@ export default new GraphQLObjectType({
                 id: { type: GraphQLInt },
             },
             resolve: (obj, args, context) => {
-                console.log("context :", context.req.session)
                 if (!context.user) {
                     return false
                 }
@@ -138,14 +137,11 @@ export default new GraphQLObjectType({
 
                 const user = await findUserByName(args.username)
 
-                console.log("user : ", user)
-
                 if (!user) {
                     throw new Error(`Aucun utilisateur correspondant`);
                 }
                 if (user.password === args.password) {
                     req.session.user = user;
-                    console.log(req.session);
                     return user;
                 }
 
