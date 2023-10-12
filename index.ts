@@ -4,12 +4,6 @@ import session from 'express-session';
 import database from './database';
 import schema from './schema';
 
-declare module 'express-session' {
-  interface SessionData {
-    user: { name: string };
-  }
-}
-
 var app = express();
 
 app.use(
