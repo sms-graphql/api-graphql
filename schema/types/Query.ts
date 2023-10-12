@@ -1,5 +1,6 @@
 import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 import { getActorById, getCategoryById, getDirectorById, getMoviesById, getPlaylistById, getPlaylistsByUserId, getStudioById, getUserById, getUserByName } from '../../database';
+import MovieOrder from '../inputs/MovieOrder';
 import actor from './Actor';
 import category from './Category';
 import director from './Director';
@@ -68,8 +69,15 @@ export default new GraphQLObjectType({
         },
         movies: {
             type: new GraphQLList(movie),
+            args: {
+                orderBy: {
+                    type: MovieOrder,
+                    defaultValue: { field: 'title', direction: 'ASC' }
+                }
+            },
             resolve: async (obj, args, { database }) => {
-                const { data } = await database.from('Movie').select('*');
+                const { orderBy } = args;
+                const { data } = await database.from('Movie').select('*').order(orderBy.field, { ascending: orderBy.direction === 'ASC' });
                 return data;
             }
         },
