@@ -19,25 +19,29 @@ const addFilmToPlaylistMutation: GraphQLFieldConfig<any, { database: SupabaseCli
             type: Playlist,
         },
     },
-    mutateAndGetPayload: async (input, { database }) => {
+    mutateAndGetPayload: async (input, { database, user }) => {
         const { filmId, playlistId } = input;
+        if (user) {
+            const { data, error } = await database
+                .from('Playlist_Movie')
+                .insert({ id_movie: filmId, id_playlist: playlistId })
 
-        const { data, error } = await database
-            .from('Playlist_Movie')
-            .insert({ id_movie: filmId, id_playlist: playlistId })
+            const { data: playlistData, error: playlistError } = await database.from('Playlist').select('*').filter('id', 'eq', playlistId);
 
-        const { data: playlistData, error: playlistError } = await database.from('Playlist').select('*').filter('id', 'eq', playlistId);
+            if (error) {
+                throw new Error(`Erreur lors de l'ajout du film à la playlist : ${error.message}`);
+            }
+            if (playlistError) {
+                throw new Error(`Erreur lors de la récupération de la playlist : ${playlistError.message}`);
+            }
 
-        if (error) {
-            throw new Error(`Erreur lors de l'ajout du film à la playlist : ${error.message}`);
+            return {
+                playlist: playlistData[0],
+            };
+        } else {
+            throw new Error(`Vous n'êtes pas autorisé à ajouter des films`);
         }
-        if (playlistError) {
-            throw new Error(`Erreur lors de la récupération de la playlist : ${playlistError.message}`);
-        }
 
-        return {
-            playlist: playlistData[0],
-        };
     },
 
 });

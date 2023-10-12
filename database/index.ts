@@ -38,6 +38,20 @@ export const findUserById = async (id: number) => {
     return data;
 };
 
+export const findUserByName = async (userName: string) => {
+    try {
+        const { data, error } = await database
+            .from('User')
+            .select('*')
+            .filter('email', 'eq', userName)
+            .single();
+        return data;
+    } catch (error) {
+        console.error("Erreur lors de la recherche de l'utilisateur :", error);
+        throw error;
+    }
+};
+
 export const getFilmsByStudioId = async (id: number) => {
     try {
         const { data, error } = await database

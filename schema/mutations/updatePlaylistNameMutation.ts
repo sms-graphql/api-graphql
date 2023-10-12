@@ -13,19 +13,23 @@ const updatePlaylistNameMutation: GraphQLFieldConfig<any, { database: SupabaseCl
     outputFields: {
         playlist: { type: Playlist },
     },
-    mutateAndGetPayload: async ({ playlistId, newName }, { database }) => {
-        const { data, error } = await database
-            .from('Playlist')
-            .update({ name: newName })
-            .eq('id', playlistId);
+    mutateAndGetPayload: async ({ playlistId, newName }, { database, user }) => {
+        if (user) {
+            const { data, error } = await database
+                .from('Playlist')
+                .update({ name: newName })
+                .eq('id', playlistId);
 
-        if (error) {
-            throw new Error(`Erreur lors de la mise à jour du nom de la playlist : ${error.message}`);
+            if (error) {
+                throw new Error(`Erreur lors de la mise à jour du nom de la playlist : ${error.message}`);
+            }
+
+            return {
+                playlist: data[0],
+            };
+        } else {
+            throw new Error(`Vous n'êtes pas autorisé à modifier cette playlist`);
         }
-
-        return {
-            playlist: data[0],
-        };
     },
 });
 

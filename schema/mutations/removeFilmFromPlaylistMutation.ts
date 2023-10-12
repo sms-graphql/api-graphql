@@ -19,25 +19,29 @@ const removeFilmFromPlaylistMutation: GraphQLFieldConfig<any, { database: Supaba
             type: Playlist,
         },
     },
-    mutateAndGetPayload: async ({ filmId, playlistId }, { database }) => {
-        const { error } = await database
-            .from('Playlist_Movie')
-            .delete()
-            .eq('id_movie', filmId)
-            .eq('id_playlist', playlistId);
+    mutateAndGetPayload: async ({ filmId, playlistId }, { database, user }) => {
+        if (user) {
+            const { error } = await database
+                .from('Playlist_Movie')
+                .delete()
+                .eq('id_movie', filmId)
+                .eq('id_playlist', playlistId);
 
-        const { data: playlistData, error: playlistError } = await database.from('Playlist').select('*').filter('id', 'eq', playlistId);
+            const { data: playlistData, error: playlistError } = await database.from('Playlist').select('*').filter('id', 'eq', playlistId);
 
-        if (error) {
-            throw new Error(`Erreur lors de l'ajout du film à la playlist : ${error.message}`);
+            if (error) {
+                throw new Error(`Erreur lors de l'ajout du film à la playlist : ${error.message}`);
+            }
+            if (playlistError) {
+                throw new Error(`Erreur lors de la récupération de la playlist : ${playlistError.message}`);
+            }
+
+            return {
+                playlist: playlistData[0],
+            };
+        } else {
+            throw new Error(`Vous n'êtes pas autorisé à retirer des films`);
         }
-        if (playlistError) {
-            throw new Error(`Erreur lors de la récupération de la playlist : ${playlistError.message}`);
-        }
-
-        return {
-            playlist: playlistData[0],
-        };
     },
 });
 

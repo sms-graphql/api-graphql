@@ -1,5 +1,5 @@
-import { GraphQLInt, GraphQLList, GraphQLObjectType } from 'graphql';
-import { findActorById, findCategoryById, findDirectorById, findFilmsById, findPlaylistById, findPlaylistsByUserId, findStudioById, findUserById } from '../../database';
+import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { findActorById, findCategoryById, findDirectorById, findFilmsById, findPlaylistById, findPlaylistsByUserId, findStudioById, findUserById, findUserByName } from '../../database';
 import actor from './Actor';
 import category from './Category';
 import director from './Director';
@@ -32,7 +32,6 @@ export default new GraphQLObjectType({
                 id: { type: GraphQLInt },
             },
             resolve: (obj, args, context) => {
-                console.log("context :", context.req.session)
                 if (!context.user) {
                     return false
                 }
@@ -118,11 +117,47 @@ export default new GraphQLObjectType({
         },
         userPlaylists: {
             type: new GraphQLList(playlist),
+            resolve: async (obj, args, { user }) => {
+                if (user) {
+                    return findPlaylistsByUserId(user.id);
+                } else {
+                    throw new Error(`Vous n'êtes pas autorisé`);
+                }
+            }
+
+        },
+        login: {
+            type: userType,
             args: {
-                id: { type: GraphQLInt }
+                username: { type: GraphQLString },
+                password: { type: GraphQLString },
             },
-            resolve: async (obj, args) => findPlaylistsByUserId(args.id)
-            
+            resolve: async (_, args, context) => {
+                const { req } = context;
+
+                const user = await findUserByName(args.username)
+
+                if (!user) {
+                    throw new Error(`Aucun utilisateur correspondant`);
+                }
+                if (user.password === args.password) {
+                    req.session.user = user;
+                    return user;
+                }
+
+                throw new Error(`Nom d'utilisateur ou mot de passe incorrect`);
+            },
+        },
+        logout: {
+            type: GraphQLString,
+            resolve: async (_, args, context) => {
+                const { req } = context;
+                if (req.session.user) {
+                    req.session.destroy();
+                    return 'Déconnexion réussie';
+                }
+                throw new Error('Aucun utilisateur connecté');
+            },
         },
     }
 });
